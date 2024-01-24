@@ -1,0 +1,156 @@
+All about Jenkins
+
+Open source automation server we use Jenkins to automate out test automation in the server,
+
+Download
+make sure the jdk version is matching the Jenkins version we use.
+WINDOW user will setup everything vis local system manually where environment variable is the setting.
+Unix user will setup everything using Terminal.
+once everything downloaded go to terminal navigate with the jenkins extracted file is then write the command below
+java -jar jenkins.war
+
+after the file get executed you will be provided by a localhost:8080 or localhost:8081 copy past in a browser
+execute the directory then the password with be indicated use that pwd to login. "install suggested plugins"
+
+create account..
+
+Now your in the main page of jenkins
+New Item --> You can add new Item
+People --> You can add more people to see your project
+Build History --> will show you the history of the project you already been created
+Manage Jenkins --> will provide you with all sort of packages you can use to configure based on your need
+
+
+Now we are trying to configure the Jenkins for our test automation.
+We gonna configure Jenkins to use OPEN JDK info
+And we gonna configure jenkins to use maven
+
+steps configuration java JDK
+click on MANAGE JENKINS/Global Tool Configuration
+click on add JDK
+under the name tab write, java_JDK
+than provide the jdk directory where the JAVA_HOME tab is in jenkins apply and save it
+
+steps configuration maven
+same process as above but this time your going to provide the directory where the pom.xml or maven is installed
+
+Now we are going to create a job to make sure if the maven is working as expected.
+Click --> New Item
+Enter an item name, We need to add a new plugins, go back where Manage Jenkins tab is,
+Click Manage Jenkins --> click on manage plugins in there you can write maven integration and install it
+
+go back and click New Item
+now you can see maven project option click on it and enter a name like atomation_framwork  and click OK
+Now if you go back you can see there is a new project visible on the make screen.
+
+now we are configure the created project,
+click on automation_project we just created
+click on configure
+
+Now we want to make sure that our project is pointing the Root POM pom.xml
+we want to copy the pom.xml file directory and paste it.
+Now the project knows the location of where the pom.xml is
+
+Now on Goals and Option tab we need to write the following command to trigger the maven pom.xml
+clean compile
+now save the project go back and click on Build project this will execute the targeted directory if the built
+was successful we are going to see the same message under the output file.
+
+everytime you click on Build project it will create a new built project with the #1 and #2 clicking on those num
+will show you the console output.
+
+Lets now configure our project more
+click on Configure
+scroll down where the Goals and options tab is this time write the following command
+clean compile test -Dcucumber.filter.tags="@regression"
+
+this will trigger the directory where the regression test cases are but still don't executed the automation tcs
+Now we need to configure more..
+
+We need to create a testng xml file
+go to https://testng.org
+click on the option 3
+click on testng.xml
+We need to create this testng file to target out runner class and we also know the out main runner class
+has the ability to target each tags connected to that specific cucumber framework classes.
+
+we need to create a package under runner class package and than we need to cure a file like testng.xml
+than we need to copy the given the fist option xml file and we need to make some edit
+we need to class with the xml file tag under the double qoutation we need to specify the location where
+the runner package is like runner.MainRunner.
+You can execute test with runner.xml file you just created and that will trigger the test cased.
+
+Surefire-Plugin
+there is another specific plugin that we need to add it on out pom.xml file
+open the pom.xml
+open the Apache Maven Project in google
+apache/maven/surefire/Maven Surefire Plugin
+go to Usage tab copy the xml first project
+edit the --> org.apache.maven.plugins
+add a new line use the
+<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                   <suiteXmlFiles>
+                       <suiteXmlFile>src/test/java/runners/testng/testng.xml</suiteXmlFile>
+                   </suiteXmlFiles>
+                </configuration>
+<plugin>
+
+sometimes if there in the log shows something like ?? marks
+there is also another plugin you can install it from "available plugins" tab
+we need to install "AnsiColor"
+
+Reporting:
+in jenkins in order to create a nice and clean JSON report we need to install a plugin called "cucumber reports"
+once you download it go to "configure" scroll down click the tab "Add post build action" in the menu click on
+cucumber reports.
+
+if you want to target specific built in your project by tag, simply go to configure
+scroll down click on "This project is parametrised/choice parameter" name=tag,
+on the CHOICE we can add regression/and the particular tag that is added in our feature file.
+we also need to change one more thing, scroll down where the "Goals and options" under the "Build"
+this time we are removing the "regression" instead we are adding this "@${tag}" and save.
+Now when you go back to project and click on Build with parameters it is going to give you choice
+which one you want to execute...
+
+How we can handle PARALLELIZATION test via Jenkins or how to setup executing test in PARALLEL using Jenkins?
+Go -> Configure -> Add Parameter -> Choice Parameter -> Name = "threadCount" -> Choice = "5 enter 4 3 2 1" save
+Now you can see threadCount as nums where Maven project automation-framework is.
+Your can also change the order of the number by going back to CONFIGURE.
+We also need to change the -> Configure -> Build -> Goals and options = -Ddataproviderthreadcount=${threadCount}
+
+There is another tag called "ignore" google is to find out how to ignore a test suite to execute in jenkins.
+clean compile test -Dcucumber.filter.tags="(@${tag} and (not @ignore))" -Ddataproviderthreadcount=${threadCount}
+now in the feature file you can pick which test case needs to be ignores why the test is executing via Jenkins
+you can add that tag @ignore at the top of that particular test.
+
+How to run test in different browsers using Jenkins....?
+Click configure -> Add Parameter -> choice parameter -> name="browserType" -> choices = chrome, firefox etc
+scroll down under "Build" -> Goals and options we need to pass another command as follow
+clean compile test -Dcucumber.filter.tags="(@${tag} and (not @ignore))" -Ddataproviderthreadcount=${threadCount} -DbrowserType=${browserType}
+Now we want to configure our automation framework to execute the test by user choice browser
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

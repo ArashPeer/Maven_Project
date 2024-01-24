@@ -1,0 +1,15 @@
+Cucumber Expression:
+If the capture group expression is identical to one of the registered parameter types’s regexp,
+the captured string will be transformed before it is passed to the step definition’s method.
+In the example above, the cukes argument will be an integer, because the built-in int parameter type’s regexp is \d+ .
+
+1- The good thing about cucumber expression is that once your defined it correctly later if you change the step
+definition you don't need to overload the cod.
+
+RUNNER CLASS
+
+In Cucumber, a runner class serves as an entry point to execute Cucumber scenarios (feature files).
+It is responsible for configuring and running Cucumber tests. The runner class typically includes annotations
+such as @RunWith(Cucumber.class) and @CucumberOptions to specify the location of feature files, step definitions,
+and other settings. When you run the runner class, it triggers the execution of Cucumber scenarios, and the results
+ are reported.
